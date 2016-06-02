@@ -1,0 +1,10 @@
+DirectoryIndex engine.php
+
+RewriteEngine on
+
+RewriteCond %{HTTP_HOST} ^www\.here-menu\.ru
+RewriteRule (.*) http://here-menu.ru/$1 [R=301,L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ engine.php [L,QSA]
