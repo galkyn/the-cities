@@ -1,8 +1,13 @@
 <?php
 
-
 class Cities {
     
+    private $dbase;
+    
+    public function __construct()
+    {
+        $this->dbase = new Dbase();
+    }
     
     public function GetLastLetterOfCity($cityName)
     {
@@ -16,11 +21,21 @@ class Cities {
     
     public function CheckCityExist($cityName)
     {
-        $db = new Dbase();
+        $db = $this->dbase;
         $arr = array('name' => $cityName);
         
         $result = $db->getOneRecord('city', 'city_id', $arr);
+        $result = ($result !== NULL) ? true : false;
         
+        return $result; 
+    }
+    
+    public function CheckCityInBuffer($cityName)
+    {
+        $db = $this->dbase;
+        $arr = array('name' => $cityName);
+        
+        $result = $db->getOneRecord('buffer', 't_stamp', $arr);
         $result = ($result !== NULL) ? true : false;
         
         return $result; 
@@ -28,7 +43,7 @@ class Cities {
     
     public function GetCityInfo($cityName)
     {
-        $db = new Dbase();
+        $db = $this->dbase;
         $arr = array('name' => $cityName);
         
         $result = $db->getRowRecord('city', $arr);
@@ -41,7 +56,7 @@ class Cities {
         
         $letter = mb_strtoupper($letter, 'UTF-8').'%';
         
-        $db = new Dbase();
+        $db = $this->dbase;
         
         $sql = "SELECT * FROM city WHERE name LIKE :letter ORDER BY RAND() LIMIT 1";
         
