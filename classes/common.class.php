@@ -32,8 +32,8 @@ class Common {
     public static function getDistance ($start_point, $end_point)
     {
         /*
-         
-         для расчета используется формула гаверсинусов
+        
+         используется формула гаверсинусов
          
          @start_point   - начальная точка: ассоциативный массив координат или строка с адресом
          @end_point     - конечная точка: ассоциативный массив координат или строка с адресом
@@ -53,6 +53,8 @@ class Common {
         $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
         
         $distance = $R * $c;
+        
+        //$distance = acos(sin($start_point['lat']) * sin($end_point['lat']) + cos($start_point['lat']) * cos($end_point['lat']) * cos($start_point['lon'] - $end_point['lon'])) * 6371; //формула для сферической теоремы косинусов
         
         $distance = round($distance, 1);
         
