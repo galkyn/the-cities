@@ -13,7 +13,9 @@ class Route
 	    'start' => 'DefaultPage'
 	),
 	'ajax' => array(
-	    'ai-turn' => 'AITurn'
+	    'ai-turn' => 'AITurn',
+	    'step' => 'Step',
+	    'game-log' => 'ShowGameLog'
 	)
     );
     
