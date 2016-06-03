@@ -24,7 +24,12 @@
     </div>
     <div class='row' style='margin-top: 1%;'>
         <div class='col-*-12' style='text-align: center; border: 1px solid #333;' id='debug'>
-            <br><br><br>&nbsp;
+            <br>&nbsp;
+        </div>
+    </div>
+    <div class='row' style='margin-top: 1%;'>
+        <div class='col-*-12' style='text-align: center; border: 1px solid #333; padding: 1%;' id='gameLog'>
+            &nbsp;
         </div>
     </div>
 </div>
