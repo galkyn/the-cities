@@ -33,6 +33,8 @@ class Common {
     {
         /*
          
+         для расчета используется формула гаверсинусов
+         
          @start_point   - начальная точка: ассоциативный массив координат или строка с адресом
          @end_point     - конечная точка: ассоциативный массив координат или строка с адресом
          
@@ -41,8 +43,18 @@ class Common {
         $start_point = (is_array($start_point) === TRUE) ? $start_point : self :: getCoordsByAddress($start_point);
         $end_point = (is_array($end_point) === TRUE) ? $end_point : self :: getCoordsByAddress($end_point);
         
-        $distance = acos(sin($start_point['lat']) * sin($end_point['lat']) + cos($start_point['lat']) * cos($end_point['lat']) * cos($start_point['lon'] - $end_point['lon'])) * 6371;
-        $distance = round($distance, 3);
+        $R = 6371;
+        $fi_1 = deg2rad($start_point['lat']);
+        $fi_2 = deg2rad($end_point['lat']);
+        $delta_fi = deg2rad($end_point['lat'] - $start_point['lat']);
+        $delta_l =  deg2rad($end_point['lon'] - $start_point['lon']);
+        
+        $a = sin($delta_fi / 2) * sin($delta_fi / 2) + cos($fi_1) * cos($fi_2) * sin($delta_l / 2) * sin($delta_l / 2);
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+        
+        $distance = $R * $c;
+        
+        $distance = round($distance, 1);
         
         return $distance;
         
