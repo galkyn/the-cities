@@ -38,6 +38,15 @@ class Common {
          @start_point   - начальная точка: ассоциативный массив координат или строка с адресом
          @end_point     - конечная точка: ассоциативный массив координат или строка с адресом
          
+         Еще одна интерпретация формулы гаверсинуса
+         
+            const double R=6371;  // Earth's radius
+            double sin1=sin((lat1-lat2)/2);
+            double sin2=sin((lon1-lon2)/2);
+            return 2*R*asin(sqrt(sin1*sin1+sin2*sin2*cos(lat1)*cos(lat2)));
+        
+            где lat1,lat2 - широты, а lon1,lon2 - долготы точек, выраженные в радианах. 
+        
         */
         
         $start_point = (is_array($start_point) === TRUE) ? $start_point : self :: getCoordsByAddress($start_point);
