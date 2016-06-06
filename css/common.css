@@ -4,6 +4,19 @@ html, body {
 }
 
 .wrapper {
-    width: 30%;
-    margin: 5% 35%;
+    width: 40%;
+    margin: 5% 30%;
+}
+
+.game-mode-title {
+    font-size: 24px;
+    text-align: center;
+    margin: 5% 0;
+    width: 100%;
+}
+
+.game-mode-icon {
+    width: 100%;
+    max-width: 512px;
+    min-width: 128px;
 }
