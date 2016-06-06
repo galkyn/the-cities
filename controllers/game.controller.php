@@ -1,17 +1,18 @@
 <?php
 
-class MainController
+class GameController
 {
-    public function DefaultPage()
+    
+    public function InitializeWorldGame()
     {
         
         include './templates/page.header.template.php';//Подключаем шаблон с заголовками сайта: скрипты, стили, тайтлы и т.д.
 	
-	include './templates/main.page.template.php';
+	include './templates/world.game.template.php';
 	
 	include './templates/page.footer.template.php';
-        
     }
+    
 }
 
 ?>
