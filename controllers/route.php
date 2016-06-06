@@ -5,7 +5,8 @@ class Route
     
     private $url_namespace = array(
 	'main' => 'main.controller',
-	'ajax' => 'ajax.controller'
+	'ajax' => 'ajax.controller',
+	'game' => 'game.controller'
     );
     
     private $url_method = array(
@@ -16,6 +17,11 @@ class Route
 	    'ai-turn' => 'AITurn',
 	    'step' => 'Step',
 	    'game-log' => 'ShowGameLog'
+	),
+	'game' => array(
+	    'single' => '',
+	    'group' => '',
+	    'world' => 'InitializeWorldGame'
 	)
     );
     
@@ -44,7 +50,7 @@ class Route
         if ( !empty($url_buff[4]) )
 	{	
 	    $this->controller = $url_buff[4];
-            $this->prefix .= '../';
+            self::$prefix .= '../';
 	}
 		
 	if ( !empty($url_buff[5]) )
