@@ -69,7 +69,10 @@ class AjaxController
 			$distance = Common :: getDistance($cityCoords, $LS_cityCoords);
 			    
 			$insData = array('t_stamp' => time(), 'city_id' => $cityInfo['city_id'], 'name' => $cityInfo['name'], 'distance' => $distance);
-			if($ins = $this->dbase->insertData('stack', $insData)) $this->message .= " Город ".$cityInfo['name']." добавлен в стек";
+			if($ins = $this->dbase->insertData('stack', $insData)) {
+			    $this->message .= " Город ".$cityInfo['name']." добавлен в стек";
+			    $this->lastLetter = mb_strtoupper($this->city->GetLastLetterOfCity($cityInfo['name']), 'UTF-8');
+			}
 			    
 		    } else {
 			$this->error = "Введенный вами город (".$this->cityName.") не подходит к последнему названному городу (".$lastStack['name'].")";
@@ -92,6 +95,7 @@ class AjaxController
 
 	$result['message'] = $this->message;
 	$result['error'] = $this->error;
+	$result['letter'] = $this->lastLetter;
 	
 	return $result;
 	
@@ -101,6 +105,8 @@ class AjaxController
     {
 	if(!empty($_POST))
 	{
+	    $this->lastLetter = mb_substr($_POST['letter'], 0, 1, 'UTF-8');
+	    
 	    $result = $this->Engine($_POST['answer']);
 	    
 	    echo json_encode($result);
