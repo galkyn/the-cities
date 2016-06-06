@@ -64,6 +64,7 @@ class Common {
         $distance = $R * $c;
         
         //$distance = acos(sin($start_point['lat']) * sin($end_point['lat']) + cos($start_point['lat']) * cos($end_point['lat']) * cos($start_point['lon'] - $end_point['lon'])) * 6371; //формула для сферической теоремы косинусов
+        //http://www.movable-type.co.uk/scripts/latlong.html
         
         $distance = round($distance, 1);
         
