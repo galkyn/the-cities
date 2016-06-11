@@ -1,22 +1,89 @@
 html, body {
     padding: 0;
     margin: 0;
+    font-family: Ubuntu, Arial;
 }
 
-.wrapper {
-    width: 40%;
-    margin: 5% 30%;
+@media only screen and (min-width:1366px){
+    body { font-size: 18px; }
 }
+
+@media only screen and (min-width:1024px) and (max-width:1365px){
+    body { font-size: 16px; }
+}
+
+@media only screen and (min-width:768px) and (max-width:1023px){
+    body { font-size: 14px; }
+}
+
+@media only screen and (max-width:767px){
+    body { font-size: 12px; }
+}
+
+.row {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.row > [class*='col-'] {
+  display: flex;
+  flex-direction: column;
+}
+
+.wrapper { width: 80%; padding: 0; margin: 0 10%; }
 
 .game-mode-title {
-    font-size: 24px;
-    text-align: center;
-    margin: 5% 0;
-    width: 100%;
+    color: #fff;
+    font-size: 2em;
+}
+
+.game-mode-desc {
+    font-size: 1em;
+    padding: 1% 0;
+    color: #fff;
 }
 
 .game-mode-icon {
     width: 100%;
-    max-width: 512px;
-    min-width: 128px;
+    max-width: 256px;
+    min-width: 96px;
+}
+
+.column {
+    margin: 1%;
+}
+
+.central {
+    background: #ecf0f1;
+}
+
+.side {
+    background: #C2E0F4;
+}
+
+.blockquote {
+font-style: italic;
+margin: 1.5em 0;
+padding: 0.5em 0;
+}
+.blockquote:before {
+color: #bbb;
+content: "\201C"; /* Непечатаемый символ слева */
+font-size: 3em;
+line-height: 0.1em;
+margin-right: 0.2em;
+vertical-align: -.4em;
+}
+.blockquote:after {
+color: #bbb;
+content: "\201D"; /* Непечатаемый символ справа */
+font-size: 3em;
+line-height: 0.1em;
+vertical-align: -.45em;
+}
+.blockquote > p:first-child {
+display: inline;
 }
