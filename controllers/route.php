@@ -19,8 +19,8 @@ class Route
 	    'game-log' => 'ShowGameLog'
 	),
 	'game' => array(
-	    'single' => '',
-	    'group' => '',
+	    'single' => 'InitializeSingleGame',
+	    'group' => 'InitializeGroupGame',
 	    'world' => 'InitializeWorldGame'
 	)
     );
