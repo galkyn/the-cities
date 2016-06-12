@@ -16,5 +16,6 @@ header('Content-Type: text/html; charset=utf-8');
     <script type="text/javascript" src="<?=Route::$prefix?>js/jquery.countdown360.min.js"></script>
     <script type="text/javascript" src="<?=Route::$prefix?>js/bootstrap.js"></script>
     <script type="text/javascript" src="<?=Route::$prefix?>js/common.js"></script>
+    <?if((class_exists('GameController')) && ((GameController::$gameMode == 'group') || (GameController::$gameMode == 'single'))){?><script type="text/javascript" src="<?=Route::$prefix?>js/single.group.mode.js"></script><?}?>
 </head>
 <body>
