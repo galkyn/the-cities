@@ -91,6 +91,44 @@ class Cities {
         return $result;    
     }
     
+    /* возвращает расстояние между двумя городами */
+    public function GetDistanceBetweenCities($cityA, $cityB)
+    {
+	$cityA_info = $this->GetCityInfo($cityA);
+	$cityB_info = $this->GetCityInfo($cityB);
+	
+	if((intval($cityA_info['lat']) == 0) && (intval($cityA_info['lon']) == 0)) {
+	    $cityA_coords = Common :: getCoordsByAddress($cityA);
+	    $update_arr = array('lat' => $cityA_coords['lat'], 'lon' => $cityA_coords['lon']);
+	    $param_arr = array('city_id' => $cityA_info['city_id']);
+	    if($this->dbase->updateData('city', $update_arr, $param_arr)) {
+		$cityA_info['lat'] = $cityA_coords['lat'];
+		$cityA_info['lon'] = $cityA_coords['lon'];
+	    }
+	} else {
+	    $cityA_coords['lat'] = $cityA_info['lat'];
+	    $cityA_coords['lon'] = $cityA_info['lon'];
+	}
+			    
+	if((intval($cityB_info['lat']) == 0) && (intval($cityB_info['lon']) == 0)) {
+	    $cityB_coords = Common :: getCoordsByAddress($cityB);
+	    $_update_arr = array('lat' => $cityB_coords['lat'], 'lon' => $cityB_coords['lon']);
+	    $_param_arr = array('city_id' => $cityB_info['city_id']);
+	    if($this->dbase->updateData('city', $_update_arr, $_param_arr)) {
+		$cityB_info['lat'] = $cityB_coords['lat'];
+		$cityB_info['lon'] = $cityB_coords['lon'];
+	    }
+	} else {
+	    $cityB_coords['lat'] = $cityB_info['lat'];
+	    $cityB_coords['lon'] = $cityB_info['lon'];
+	}
+			    
+	$distance = Common :: getDistance($cityA_coords, $cityB_coords);
+   
+	return $distance;
+   
+    }
+    
 }
 
 
