@@ -16,6 +16,7 @@ class Route
 	'ajax' => array(
 	    'ai-turn' => 'AITurn',
 	    'step' => 'Step',
+	    'check-city' => 'CheckCity',
 	    'game-log' => 'ShowGameLog'
 	),
 	'game' => array(
