@@ -2,6 +2,33 @@
 
 class Common {
     
+    /* Возвращает сообщение для игрока в зависимости от дистанции, на которогй находится новый город */
+    public static function GetMessageForPlayer($dist)
+    {
+        
+        $messages = array(
+            'a' => array("Ну как-то так.", "Чет совсем недалеко.", "А говорят снаряд в одну воронку два раза не падает.", "Ты специально?"),
+            'b' => array("Можно было и лучше", "Давай, поднажми", "Наморщи ум!"),
+            'c' => array("Неплохо", "Весьма недурно", "Хорошо идет", "Так держать"),
+            'd' => array("А ты молодец!", "Ну, силен!", "Кто-то в школе не прогуливал географию :)"),
+            'f' => array("Круто!", "Откуда ты это знаешь?!", "Да ты Гео-монстр какой-то!")
+        );
+        
+        if($dist <= 1000) $param = 'a';
+        elseif(($dist > 1000) && ($dist <= 5000)) $param = 'b';
+        elseif(($dist > 5000) && ($dist <= 10000)) $param = 'c';
+        elseif(($dist > 10000) && ($dist <= 18000)) $param = 'd';
+        elseif($dist > 18000) $param = 'f';
+        
+        return $messages[$param][rand(0, count($messages[$param]) - 1)];
+        
+    }
+    
+    /* Переводит первый символ в строке в верхний регистр для многобайтных кодировок */
+    public static function mbUcfirst ($str, $enc = 'utf-8')
+    {
+        return mb_strtoupper(mb_substr($str, 0, 1, $enc), $enc).mb_substr($str, 1, mb_strlen($str, $enc), $enc); 
+    }
     
     /* Возвращает массив с координатами места по его адресу используя API Google Maps */
     public static function getCoordsByAddress ($address) 
@@ -72,7 +99,8 @@ class Common {
         
     }
     
-    public static function getCartesian($input)
+    /* Перебирает массив массивов */
+    public static function getCartesian ($input)
     {
         $result = array();
     
