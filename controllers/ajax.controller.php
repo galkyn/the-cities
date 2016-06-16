@@ -5,8 +5,8 @@ class AjaxController
 
     private $city;
     private $dbase;
-    private $cityName;
-    private $lastLetter;
+    private $newCity;
+    private $lastCity;
     private $error = '';
     private $message = '';
     
@@ -16,28 +16,34 @@ class AjaxController
 	$this->city = new Cities();
     }
     
-    public function Engine($cityName)
+    
+    public function Engine($newCity)
     {
 	
-	$this->cityName = $cityName;
+	/*
+	 * функция для глобальной игры, но нуждается в серьезной переделке. 
+	 * По большому счету, имеет смысл переписать заново с учетом новых явлений
+	 */
+	
+	$this->newCity = $newCity;
 	    
 	/* Проверка - есть ли такой город в БД */
-	if($this->city->CheckCityExist($this->cityName) === true) {
+	if($this->city->CheckCityExist($this->newCity) === true) {
 		
 	    /* Проверка - есть ли такой город в стеке последних названных */
-	    if($this->city->CheckCityInStack($this->cityName) === false) {
+	    if($this->city->CheckCityInStack($this->newCity) === false) {
 		    
 		$lastStack = $this->city->GetLastCityFromStack(); /* Выборка последней записи из стека */
 		$LS_cityInfo = $this->city->GetCityInfo($lastStack['name']);
-		$cityInfo = $this->city->GetCityInfo($this->cityName);
+		$cityInfo = $this->city->GetCityInfo($this->newCity);
 		    
 		/* Если стек не пустой */
 		if($lastStack !== false){
 		    $LastStack_LastLetter = $this->city->GetLastLetterOfCity($lastStack['name']);
-		    $cityName_FirstLetter = $this->city->GetFirstLetterOfCity($this->cityName);
+		    $newCity_FirstLetter = $this->city->GetFirstLetterOfCity($this->newCity);
 			
 		    /* Проверка - совпадает ли буквы начала и конца */
-		    if($LastStack_LastLetter == $cityName_FirstLetter) {
+		    if($LastStack_LastLetter == $newCity_FirstLetter) {
 		    /* Вычисляем дистанцию до города и записываем в стек, проверяем, если количество рядов больше заданного, стираем лишнии */
 			    
 			if((intval($cityInfo['lat']) == 0) && (intval($cityInfo['lon']) == 0)) {
@@ -71,11 +77,11 @@ class AjaxController
 			$insData = array('t_stamp' => time(), 'city_id' => $cityInfo['city_id'], 'name' => $cityInfo['name'], 'distance' => $distance);
 			if($ins = $this->dbase->insertData('stack', $insData)) {
 			    $this->message .= " Город ".$cityInfo['name']." добавлен в стек";
-			    $this->lastLetter = mb_strtoupper($this->city->GetLastLetterOfCity($cityInfo['name']), 'UTF-8');
+			    $this->lastCity = mb_strtoupper($this->city->GetLastLetterOfCity($cityInfo['name']), 'UTF-8');
 			}
 			    
 		    } else {
-			$this->error = "Введенный вами город (".$this->cityName.") не подходит к последнему названному городу (".$lastStack['name'].")";
+			$this->error = "Введенный вами город (".$this->newCity.") не подходит к последнему названному городу (".$lastStack['name'].")";
 		    }
 		} else {
 		    /* Записываем город в стек, дистанцию ставим 0 - это первая запись в стеке */
@@ -95,7 +101,7 @@ class AjaxController
 
 	$result['message'] = $this->message;
 	$result['error'] = $this->error;
-	$result['letter'] = $this->lastLetter;
+	$result['letter'] = $this->lastCity;
 	
 	return $result;
 	
@@ -105,7 +111,7 @@ class AjaxController
     {
 	if(!empty($_POST))
 	{
-	    $this->lastLetter = mb_substr($_POST['letter'], 0, 1, 'UTF-8');
+	    $this->lastCity = mb_substr($_POST['letter'], 0, 1, 'UTF-8');
 	    
 	    $result = $this->Engine($_POST['answer']);
 	    
@@ -140,6 +146,31 @@ class AjaxController
 	echo json_encode($result);
 	
     }
+    
+    public function CheckCity()
+    {
+	if(!empty($_POST))
+	{
+	    $this->newCity = Common :: mbUcfirst($_POST['nCity']);
+	    $this->lastCity = Common :: mbUcfirst($_POST['lCity']);
+	    
+	    if($this->city->CheckCityExist($this->newCity) === true) {
+		
+		$distance = $this->city->GetDistanceBetweenCities($this->newCity, $this->lastCity);
+		$newCityInfo = $this->city->GetCityInfo($this->newCity);
+		
+		$result['coords'] = $newCityInfo['lat'].",".$newCityInfo['lon'];
+		$result['distance'] = $distance;
+		$result['message'] = Common :: GetMessageForPlayer($distance);
+		
+	    } else {
+		$result['error'] = "К сожалению, мы не знаем такого города.";
+	    }
+	    
+	    echo json_encode($result);
+	}
+    }
+    
 }
 
 ?>
