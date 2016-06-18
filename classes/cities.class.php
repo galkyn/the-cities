@@ -124,6 +124,7 @@ class Cities {
 	}
 			    
 	$distance = Common :: getDistance($cityA_coords, $cityB_coords);
+	$distance = round($distance, 1);
    
 	return $distance;
    
