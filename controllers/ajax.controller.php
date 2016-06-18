@@ -149,19 +149,34 @@ class AjaxController
     
     public function CheckCity()
     {
+	/*
+	 *
+	 * Метод проверяет есть ли введеный игроком город в БД, возвращает его координаты,  текстовое сообщение
+	 * для игрока и высчитывает расстояние от предыдущего города. Для режима игры: Single / Hot Seat
+	 *
+	 */
+	
 	if(!empty($_POST))
 	{
 	    $this->newCity = Common :: mbUcfirst($_POST['nCity']);
-	    $this->lastCity = Common :: mbUcfirst($_POST['lCity']);
+	    
 	    
 	    if($this->city->CheckCityExist($this->newCity) === true) {
 		
-		$distance = $this->city->GetDistanceBetweenCities($this->newCity, $this->lastCity);
+		if($_POST['lCity'] != '_NA_'){
+		    $this->lastCity = Common :: mbUcfirst($_POST['lCity']);
+		    $distance = $this->city->GetDistanceBetweenCities($this->newCity, $this->lastCity);
+		} else {
+		    $distance = 0;
+		}
+		
+		
 		$newCityInfo = $this->city->GetCityInfo($this->newCity);
 		
 		$result['coords'] = $newCityInfo['lat'].",".$newCityInfo['lon'];
 		$result['distance'] = $distance;
 		$result['message'] = Common :: GetMessageForPlayer($distance);
+		$result['error'] = 'no error';
 		
 	    } else {
 		$result['error'] = "К сожалению, мы не знаем такого города.";
