@@ -1,37 +1,32 @@
-$(function(){
    
-    function CheckLetter() {
-	
-	if ($('#CheckLetterInput').val() == '_NA_') {
-	    return true;
-	} else {
-	    var UserLetter = $('#CityNameInput').val().charAt(0);
-	    if (UserLetter == $('#CheckLetterInput').val()) {
-		return true;
-	    } else {
-		return false;
-	    }
-	}
-	
-	
-    }   
+    var CompareFirstLastLetter = function(newWord, oldWord)
+    {
+        newWord = newWord.charAt(0).toLowerCase();
+        oldWord = (oldWord.charAt(oldWord.length - 1).toLowerCase() !== 'ь') ? oldWord.charAt(oldWord.length - 1).toLowerCase() : oldWord.charAt(oldWord.length - 2).toLowerCase();
+        
+        if (newWord === oldWord) {
+            return true;
+        } else {
+            return false;
+        }
+    } 
    
-    function LoadGameLog() {
-        
-	    $.post(prefix + 'ajax/game-log', { mode: gameMode }, function(data) {
-		data = jQuery.parseJSON(data);
+    var LoadGameLog = function()
+    {
+	$.post(prefix + 'ajax/game-log', { mode: gameMode }, function(data) {
+	    data = jQuery.parseJSON(data);
 		
-		$('#gameLog').html('');
-		var str = '';
+	    $('#gameLog').html('');
+	    var str = '';
 		
-		$.each(data, function(key, value) { str += ' - ' + key + '<sup>' + value + ' км.</sup>'; });
+	    $.each(data, function(key, value) { str += ' - ' + key + '<sup>' + value + ' км.</sup>'; });
 		
-		$('#gameLog').html(str.substring(3));
+	    $('#gameLog').html(str.substring(3));
 		
-	    }); 
-        
+	});  
     }
-   
+    
+   /*
     $('#SendAnswerButton').click(function(){
         
 	if (CheckLetter) {
@@ -56,7 +51,5 @@ $(function(){
 	});
         
     });
+    */
     
-    LoadGameLog();
-    
-});
