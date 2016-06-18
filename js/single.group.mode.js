@@ -12,12 +12,7 @@ $(function(){
     var scoreTable = {};
     var scoreTableCount = 0;
     
-    var citiesStack = {
-        "Москва" : 1238,
-        "Армавир" : 2538,
-        "Рыбинск" : 2838,
-        "Калина" : 4238
-    };
+    var citiesStack = {};
     
     var BotNames = ["Bashful Bot", "Doc Bot", "Dopey Bot", "Grumpy Bot", "Happy Bot", "Sleepy Bot", "Sneezy Bot"]; 
     var BotCounter = 0;
@@ -34,7 +29,9 @@ $(function(){
  
     var countdownComplete = function(unit, value, total){
         if(total<=0){
-            $(this).fadeOut(800).replaceWith("<h2>Time's Up!</h2>");
+            //$(this).fadeOut(800).replaceWith("<h2>Time's Up!</h2>");
+            $('#CurrentPlayerIndicator').text("Время вышло! Ход переходит к следующему игроку!");
+            setTimeout(SkipAnswer, 2000);
         }
     }
  
@@ -98,20 +95,22 @@ $(function(){
         } 
     } 
     
+    var AiAnswer = function()
+    {
+        countdown.stop();
+        
+        var lastCity = $('#LastCityInput').val();
+        
+    }
     
     
-    /*
-     * 1. Проверка на совпадение букв: первая = последняя - done
-     * 2. Проверка на наличие в стеке
-     * 3. Проверка в БД, наличие города
-     * 4. Рассчет расстояния
-     */
-    var ProceedAnswer = function()
+    var HumanAnswer = function()
     {
         countdown.stop();
         
         var newCity = $('#CityNameInput').val();
         var lastCity = $('#LastCityInput').val();
+        var lastLetter = (newCity.charAt(newCity.length - 1).toLowerCase() !== 'ь') ? newCity.charAt(newCity.length - 1).toUpperCase() : newCity.charAt(newCity.length - 2).toUpperCase();
         
         if (lastCity !== '_NA_') {
             if(!CompareFirstLastLetter(newCity, lastCity)){
@@ -125,16 +124,57 @@ $(function(){
                     
                     $.post(prefix + 'ajax/check-city', { mode: gameMode, nCity: newCity, lCity: lastCity }, function(data){
                         data = jQuery.parseJSON(data);
-                        for(name in data)
-                        {
-                            $('#debug').append(name + " - " + data[name] + "<br>");
+                        
+                        if (data.error == 'no error') {
+                            
+                            citiesStack[newCity] = { distance:data.distance, coords:data.coords };
+                            scoreTable[CurrentPlayer].score = scoreTable[CurrentPlayer].score + Math.floor(parseFloat(data.distance));
+                            scoreTable[CurrentPlayer].lap_count++;
+                            
+                            $('#debug').html(data.message + ": +" + data.distance + " км.");
+                            $('#CityNameInput').val(lastLetter);
+                            $('#LastCityInput').val(newCity);
+                            ShowPlayersList();
+                            ShowCitiesStack();
+                            ProceedGame();
+                        } else {
+                            $('#debug').html(data.error);
+                            countdown.start();
                         }
+                        
                     });
-                                
+                     
                 }
             }
+        } else {
+            if (newCity in citiesStack) {
+                alert("Город " + newCity + " не так давно называл один из участников");
+                countdown.start();
+            } else {
+                    
+                $.post(prefix + 'ajax/check-city', { mode: gameMode, nCity: newCity, lCity: lastCity }, function(data){
+                    data = jQuery.parseJSON(data);
+                    
+                    if (data.error == 'no error') {
+                        $('#debug').html(data.message + " " + data.distance);
+                        citiesStack[newCity] = { distance:data.distance, coords:data.coords };
+                        scoreTable[CurrentPlayer].score = scoreTable[CurrentPlayer].score + Math.floor(parseFloat(data.distance));
+                        scoreTable[CurrentPlayer].lap_count++;
+                        
+                        $('#debug').html(data.message + " (+" + data.distance + " км.)");
+                        $('#CityNameInput').val(lastLetter);
+                        $('#LastCityInput').val(newCity);
+                        ShowPlayersList();
+                        ShowCitiesStack();
+                        ProceedGame();
+                    } else {
+                        $('#debug').html(data.error);
+                        countdown.start();
+                    }
+                });
+                                
+            }    
         }
-        
     }
     
     //Возвращает случайное число в диапазоне от min до max
@@ -151,7 +191,7 @@ $(function(){
     }
     
     $('#AddBotToListButton').click(function() { AddBotToList(); });
-    $('#SendAnswerButton').click(function() { ProceedAnswer(); });
+    $('#SendAnswerButton').click(function() { HumanAnswer(); });
     $('#SkipAnswerButton').click(function() { SkipAnswer(); });
     
     $(document).on('click', '.DelPlayerButton', function(event){
@@ -162,6 +202,12 @@ $(function(){
         BotCounter = 0;
         ShowPlayersList();
         
+    });
+    
+    $("#CityNameInput").keyup(function(event){
+        if(event.keyCode == 13){
+            $("#SendAnswerButton").click();
+        }
     });
 
     $('#CreateGameButton').click(function() {
@@ -187,7 +233,7 @@ $(function(){
             
         CreateCountDown();
             
-        setTimeout(ProceedGame, 3000);
+        setTimeout(ProceedGame, 2000);
             
     });
 
@@ -211,9 +257,11 @@ $(function(){
                     CurrentPlayer = player;
                     CurrentPlayerCount++;
                     
-                    //alert(CurrentPlayer + " - " + scoreTable[CurrentPlayer].lap_count);
                     $('#CurrentPlayerIndicator').text("Отвечает: " + player);
                     $('#CurrentLapIndicator').text(scoreTable[player].lap_count);
+                    
+                    //if (scoreTable[player].player_type === 'ai') { AiAnswer(); }
+                    
                     break;
                 } else {
                     continue;
@@ -251,4 +299,16 @@ $(function(){
         }
     }
 
+    var ShowCitiesStack = function()
+    {
+        var str = '';
+        var lastCity = $('#LastCityInput').val();
+        
+        $.each(citiesStack, function(key, value){
+            str += (key === lastCity) ? " - <b>" + key + "</b><sup>" + value.distance + " км.</sup>" : " - " + key + "<sup>" + value.distance + " км.</sup>";
+        });
+	
+        $('#gameLog').html(str.substring(3));
+    }
+    
 });
