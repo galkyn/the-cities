@@ -1,5 +1,5 @@
 
-<input type='hidden' id='CheckLetterInput' value='_NA_'>
+<input type='hidden' id='LastCityInput' value='_NA_'>
 
 
 <div class='container-fluid'>
@@ -21,7 +21,10 @@
     <div class='col-xs-12 col-sm-4 col-sm-push-4 central'>
 	<div class='row'>
 	    <div class='col-xs-12'>
-		<div id='CurrentLapIndicator'></div>
+		<div id='CurrentLap' class='current-lap'></div>
+		<div id='CurrentLapIndicator' class='lap-indicator brd'>
+		    <div id='LapIndicatorProgress' class='brd lap-progress'></div>
+		</div>
 	    </div>
 	</div>
         <div class='row'>
@@ -33,7 +36,7 @@
         <div class='row'>
             <div class='col-xs-12' style='text-align: center;'>
 		
-		<div id="countdown"></div>
+		<div id="countdown" data-timer='16'></div>
 		<!--
 		<script type="text/javascript" charset="utf-8">
 
