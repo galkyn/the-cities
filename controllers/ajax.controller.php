@@ -119,15 +119,46 @@ class AjaxController
 	}
     }
     
-    public function AITurn()
+    public function AiAnswer()
     {
             
-	$LastStack = $this->city->GetLastCityFromStack();
-	$LastLetter = $this->city->GetLastLetterOfCity($LastStack['name']);
-	$NextCity = $this->city->FindNextCity($LastLetter);
-	
-	$result = $this->Engine($NextCity['name']);
-	
+	if(!empty($_POST))
+	{
+	    if($_POST['mode'] == 'group')
+	    {
+		$this->lastCity = ($_POST['lCity'] != '_NA_') ? $this->lastCity = Common :: mbUcfirst($_POST['lCity']) : '_NA_';
+		
+		$LastLetter = ($this->lastCity != '_NA_') ? $this->city->GetLastLetterOfCity($this->lastCity) : '_NA_';
+		
+		$newCity = $this->city->FindNextCity($LastLetter);
+		$this->newCity = $newCity['name'];
+		
+		$result['city'] = $this->newCity;
+		$result['distance'] = ($this->lastCity != '_NA_') ? $this->city->GetDistanceBetweenCities($this->newCity, $this->lastCity) : 0;
+		
+		$newCity = $this->city->GetCityInfo($this->newCity);
+		
+		if((intval($newCity['lat']) == 0) && (intval($newCity['lon']) == 0)) {
+		    $newCityCoords = Common :: getCoordsByAddress($this->newCity);
+		    $newCity['lat'] = $newCityCoords['lat'];
+		    $newCity['lon'] = $newCityCoords['lon'];
+		}
+		
+		
+		
+		$result['coords'] = $newCity['lat'].",".$newCity['lon'];
+		
+		$result['message'] = "Искуственный разум отвечает";
+		$result['error'] = 'no error';
+		
+	    } elseif($_POST['mode'] == 'world') {
+		$LastStack = $this->city->GetLastCityFromStack();
+		$LastLetter = $this->city->GetLastLetterOfCity($LastStack['name']);
+		$NextCity = $this->city->FindNextCity($LastLetter);
+		$result = $this->Engine($NextCity['name']);
+	    }
+	}
+	    
 	echo json_encode($result);
 	
     }
@@ -173,6 +204,7 @@ class AjaxController
 		
 		$newCityInfo = $this->city->GetCityInfo($this->newCity);
 		
+		$result['city'] = $this->newCity;
 		$result['coords'] = $newCityInfo['lat'].",".$newCityInfo['lon'];
 		$result['distance'] = $distance;
 		$result['message'] = Common :: GetMessageForPlayer($distance);
