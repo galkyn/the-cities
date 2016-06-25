@@ -51,6 +51,8 @@ class Common {
         $arr['lat'] = $json['results'][0]['geometry']['location']['lat'];
         $arr['lon'] = $json['results'][0]['geometry']['location']['lng'];
          
+        //$arr = $json;
+         
         return $arr;
 
     }
