@@ -6,7 +6,8 @@ class Route
     private $url_namespace = array(
 	'main' => 'main.controller',
 	'ajax' => 'ajax.controller',
-	'game' => 'game.controller'
+	'game' => 'game.controller',
+	'service' => 'service.controller'
     );
     
     private $url_method = array(
@@ -14,7 +15,7 @@ class Route
 	    'start' => 'DefaultPage'
 	),
 	'ajax' => array(
-	    'ai-turn' => 'AITurn',
+	    'ai-answer' => 'AiAnswer',
 	    'step' => 'Step',
 	    'check-city' => 'CheckCity',
 	    'game-log' => 'ShowGameLog'
@@ -23,6 +24,9 @@ class Route
 	    'single' => 'InitializeSingleGame',
 	    'group' => 'InitializeGroupGame',
 	    'world' => 'InitializeWorldGame'
+	),
+	'service' => array(
+	    'find-coords' => 'FindCoords'
 	)
     );
     
