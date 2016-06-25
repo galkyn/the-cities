@@ -1,8 +1,13 @@
    
+    var GetLastLetter = function(word)
+    {
+	return (word.charAt(word.length - 1).toLowerCase() === 'ь' || word.charAt(word.length - 1).toLowerCase() === 'ы') ? word.charAt(word.length - 2).toUpperCase() : word.charAt(word.length - 1).toUpperCase();
+    }
+   
     var CompareFirstLastLetter = function(newWord, oldWord)
     {
         newWord = newWord.charAt(0).toLowerCase();
-        oldWord = (oldWord.charAt(oldWord.length - 1).toLowerCase() !== 'ь') ? oldWord.charAt(oldWord.length - 1).toLowerCase() : oldWord.charAt(oldWord.length - 2).toLowerCase();
+        oldWord = GetLastLetter(oldWord);
         
         if (newWord === oldWord) {
             return true;
