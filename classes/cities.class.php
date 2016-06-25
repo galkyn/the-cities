@@ -13,7 +13,8 @@ class Cities {
     public function GetLastLetterOfCity($cityName)
     {
         $cityName =  preg_replace('/[^a-zA-Zа-яА-Я-_ ]/ui', '', $cityName); 
-        $result = (mb_substr(mb_strtolower($cityName, 'UTF-8'), -1, 1, 'UTF-8') != 'ь') ? mb_substr($cityName, -1, 1, 'UTF-8') : mb_substr($cityName, -2, 1, 'UTF-8');
+        //$result = (mb_substr(mb_strtolower($cityName, 'UTF-8'), -1, 1, 'UTF-8') != 'ь') ? mb_substr($cityName, -1, 1, 'UTF-8') : mb_substr($cityName, -2, 1, 'UTF-8');
+	$result = ((mb_substr(mb_strtolower($cityName, 'UTF-8'), -1, 1, 'UTF-8') == 'ь') || (mb_substr(mb_strtolower($cityName, 'UTF-8'), -1, 1, 'UTF-8') == 'ы')) ? mb_substr($cityName, -2, 1, 'UTF-8') : mb_substr($cityName, -1, 1, 'UTF-8');
         return $result;
     }
     
@@ -75,13 +76,13 @@ class Cities {
     /* Случайным образом находит в БД город по первой букве */
     public function FindNextCity($letter)
     {
+        $letter = ($letter != '_NA_') ? mb_strtoupper($letter, 'UTF-8').'%' : '_NA_';
+	
         
-        $letter = mb_strtoupper($letter, 'UTF-8').'%';
-        
-        $sql = "SELECT * FROM city WHERE name LIKE :letter ORDER BY RAND() LIMIT 1";
+        $sql = ($letter != '_NA_') ? "SELECT name FROM city WHERE name LIKE :letter ORDER BY RAND() LIMIT 1" : "SELECT name FROM city ORDER BY RAND() LIMIT 1";
         
         $query = $this->dbase->prepare($sql);
-        $query->bindParam(':letter', $letter, PDO::PARAM_STR);
+        if($letter != '_NA_') $query->bindParam(':letter', $letter, PDO::PARAM_STR);
         $query->execute();
         
         $result = $query->fetch();
