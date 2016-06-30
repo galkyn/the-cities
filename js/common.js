@@ -31,30 +31,3 @@
 	});  
     }
     
-   /*
-    $('#SendAnswerButton').click(function(){
-        
-	if (CheckLetter) {
-	    $.post(prefix + 'ajax/step', { mode: gameMode, answer: $('#CityNameInput').val(), letter: $('#CheckLetterInput').val() }, function(data){
-		data = jQuery.parseJSON(data);
-		$('#CityNameInput').val(data.letter);
-		$('#CheckLetterInput').val(data.letter);
-		$('#debug').html(data.message + " : " + data.error);
-		LoadGameLog();
-	    });
-	}
-    });
-    
-    $('#SkipAnswerButton').click(function(){
-        
-        $.post(prefix + 'ajax/ai-turn', { mode: gameMode, answer: $('#CityNameInput').val(), letter: $('#CheckLetterInput').val() }, function(data){
-	    data = jQuery.parseJSON(data);
-            $('#CityNameInput').val(data.letter);
-            $('#CheckLetterInput').val(data.letter);
-            $('#debug').html(data.message + " : " + data.error);
-            LoadGameLog();
-	});
-        
-    });
-    */
-    
