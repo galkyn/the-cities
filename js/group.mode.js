@@ -1,10 +1,5 @@
 $(function(){
     
-    if (gameMode == 'single') {
-        scoreTable.player = { player_type:'human', score:0 };
-        scoreTable.comp = { player_type:'ai', score:0 };
-    }
-   
     var countdown;
     
     //alert(countdown.settings.seconds);
@@ -27,6 +22,7 @@ $(function(){
     var TopPlayerName = '';
     var TopPlayerScore = 0;
  
+    // Функция, отрабатывающая, когда время на ответ вышло 
     var countdownComplete = function(unit, value, total){
         if(total<=0){
             //$(this).fadeOut(800).replaceWith("<h2>Time's Up!</h2>");
@@ -34,7 +30,8 @@ $(function(){
             setTimeout(SkipAnswer, 2000);
         }
     }
- 
+
+    // Функция, создающая таймер обратного отчета 
     var CreateCountDown = function()
     {
         
@@ -64,7 +61,8 @@ $(function(){
         
         countdown.addListener(countdownComplete);
     }
- 
+
+    // Функция, добавляющая игрока в список играющих 
     $('#AddNewPlayerToScoreListButton').click(function() {
         var playerName = $('#PlayerName').val();
         
@@ -77,6 +75,7 @@ $(function(){
         
     });
     
+    // Функция, добавляющая бота в список играющих 
     var AddBotToList = function()
     {
         if (BotCounter < BotNames.length) {
@@ -95,6 +94,7 @@ $(function(){
         } 
     } 
     
+    // Функция, ответ бота 
     var AiAnswer = function()
     {
         countdown.stop();
@@ -135,7 +135,7 @@ $(function(){
         
     }
     
-    
+    // Функция, ответ человека 
     var HumanAnswer = function()
     {
         countdown.stop();
@@ -192,10 +192,12 @@ $(function(){
         ProceedGame();
     }
     
+    //Перехват событий кнопок: Добавление бота в список игроков, ответ игрока, игрок жмет кнопку "не знаю"
     $('#AddBotToListButton').click(function() { AddBotToList(); });
     $('#SendAnswerButton').click(function() { HumanAnswer(); });
     $('#SkipAnswerButton').click(function() { SkipAnswer(); });
     
+    //Перехват кнопок с классом "удалить игрока"
     $(document).on('click', '.DelPlayerButton', function(event){
         var playerName = event.target.id;
         
@@ -206,12 +208,14 @@ $(function(){
         
     });
     
+    //Перехват нажатия кнопки Enter -> эмуляция нажатия кнопки "Ответить"
     $("#CityNameInput").keyup(function(event){
         if(event.keyCode == 13){
             $("#SendAnswerButton").click();
         }
     });
 
+    //Функция создания игры
     $('#CreateGameButton').click(function() {
         LapCount = parseInt($('#LapCount').val());
         if (LapCount == 0) { LapCount = 1000000; }
@@ -255,6 +259,7 @@ $(function(){
             
     });
 
+    //Движок игры, главная функция обеспечивающая процесс игры
     var ProceedGame = function()
     {
         
@@ -310,6 +315,7 @@ $(function(){
         
     }
     
+    //Функция отображающая список игроков
     var ShowPlayersList = function()
     {
         $('#PlayersListBox').html("<tr><td colspan='4' style='background:#1A4C6D; color:#fff; text-align:center; padding:1%; border-radius: 3px;'><strong>Список игроков</strong></td></tr>");
@@ -320,18 +326,21 @@ $(function(){
         }
     }
 
+    //Функция отображающая список названных городов
     var ShowCitiesStack = function()
     {
         var str = '';
         var lastCity = $('#LastCityInput').val();
         
         $.each(citiesStack, function(key, value){
+            
             str += (key === lastCity) ? " - <b>" + key + "</b><sup>" + value.distance + " км.</sup>" : " - " + key + "<sup>" + value.distance + " км.</sup>";
         });
 	
         $('#gameLog').html(str.substring(3));
     }
     
+    //Функция отображающая прогресс игры (сколько кругов прошло и сколько осталось)
     var DrawLapIndicator = function()
     {
         var width = $('#CurrentLapIndicator').width();
